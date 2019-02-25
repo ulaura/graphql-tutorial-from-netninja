@@ -1,0 +1,22 @@
+{
+  "name": "graphql-tutorial-from-netninja",
+  "version": "1.0.0",
+  "description": "graphql tutorial from the net ninja",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "graphql",
+    "tutorial",
+    "netninja",
+    "net",
+    "ninja",
+    "youtube"
+  ],
+  "author": "Laura Unaeze",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.4"
+  }
+}
