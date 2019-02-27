@@ -119,11 +119,32 @@ const Mutation = new GraphQLObjectType({
           name: args.name,
           age:  args.age
         });
-        return author.save();
+        // must return if we want to see data after
+        // we make mutation query in a graphql GUI
+        return author.save(); 
+      }
+    },
+    addBook: {
+      type: BookType,
+      args: {
+        name:     { type: GraphQLString },
+        genre:    { type: GraphQLString },
+        authorId: { type: GraphQLID }
+      },
+      resolve(parent, args) {
+        // this Book is coming from the mongodb model
+        let book = new Book({
+          name:     args.name,
+          genre:    args.genre,
+          authorId: args.authorId
+        });
+        // must return if we want to see data after
+        // we make mutation query in a graphql GUI
+        return book.save();
       }
     }
   }
-})
+});
 
 // exporting queries users are allowed to use on the front end
 module.exports = new GraphQLSchema({
