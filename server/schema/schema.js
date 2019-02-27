@@ -32,6 +32,8 @@ const BookType = new GraphQLObjectType({
       type: AuthorType,  // just AuthorType because each book has only 1 author
       resolve(parent, args) {
         // return _.find(authors, {id: parent.authorId})
+        // .findById() is from mongoose
+        return Author.findById(parent.authorId);
       }
     }
   })
@@ -47,6 +49,8 @@ const AuthorType = new GraphQLObjectType({
       type: new GraphQLList(BookType), // a GraphQL list of BookType since authors have more than one book
       resolve(parent, args){
         // return _.filter(books, {authorId: parent.id})
+        // .find() from mongoose
+        return Book.find({authorId: parent.id})
       }
     }
   })
@@ -76,6 +80,7 @@ const RootQuery = new GraphQLObjectType({
       resolve(parent, args){
         // code to get data from db or other source
         // return _.find(books, {id: args.id});
+        return Book.findById(args.id);
       }
     },
     author: {
@@ -84,18 +89,22 @@ const RootQuery = new GraphQLObjectType({
       resolve(parent, args){
         // code to get data from db or other source
         // return _.find(authors, {id: args.id});
+        return Author.findById(args.id);
       }
     },
     books: {
       type: new GraphQLList(BookType),
       resolve(parent, args){ // not using any arguments in this case...
         // return books;
+        // uising .find() with an empty object returns all data
+        return Book.find({});
       }
     },
     authors: {
       type: new GraphQLList(AuthorType),
       resolve(parent, args){ // not using any arguments in this case...
         // return authors;
+        return Author.find({});
       }
     },
   }
@@ -120,7 +129,8 @@ const Mutation = new GraphQLObjectType({
           age:  args.age
         });
         // must return if we want to see data after
-        // we make mutation query in a graphql GUI
+        // we make mutation query in a graphql GUI.
+        // also, .save() is from mongoose
         return author.save(); 
       }
     },
@@ -139,7 +149,8 @@ const Mutation = new GraphQLObjectType({
           authorId: args.authorId
         });
         // must return if we want to see data after
-        // we make mutation query in a graphql GUI
+        // we make mutation query in a graphql GUI.
+        // also, .save() is from mongoose
         return book.save();
       }
     }
