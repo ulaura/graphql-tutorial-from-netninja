@@ -17,6 +17,7 @@ const {
   1. Define types
   2. Define relationsips between types.
   3. Define root queries
+  4. Define a way to manipulate data (Mutations)
 */
 
 
@@ -100,8 +101,33 @@ const RootQuery = new GraphQLObjectType({
   }
 });
 
+// 4. Defining a way to manipulate data
+const Mutation = new GraphQLObjectType({
+  name: "Mutation",
+  fields: {
+    addAuthor: {
+      type: AuthorType, // AuthorType because we're trying to add an author
+      args: {
+        name: { type: GraphQLString },
+        age:  { type: GraphQLInt }
+        // we're not adding an id because MongoDB automatically
+        // indexes data as it's entered into the database
+      },
+      resolve(parent, args) {
+        // this Author is coming from the mongodb model
+        let author = new Author({
+          name: args.name,
+          age:  args.age
+        });
+        return author.save();
+      }
+    }
+  }
+})
+
 // exporting queries users are allowed to use on the front end
 module.exports = new GraphQLSchema({
-  query: RootQuery
+  query: RootQuery,
+  mutation: Mutation
 });
 
