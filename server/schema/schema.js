@@ -6,7 +6,8 @@ const {
   GraphQLString, 
   GraphQLSchema,
   GraphQLID,
-  GraphQLInt 
+  GraphQLInt,
+  GraphQLList 
 } = graphql;
 
 /*
@@ -19,9 +20,12 @@ const {
 // begin dummy data
 // =================
 const books = [
-  { name: "Name of the Wind", genre: "Fantasy", id: "1", authorId: "1" },
-  { name: "The Final Empire", genre: "Fantasy", id: "2", authorId: "2" },
-  { name: "The Long Earth",   genre: "Sci-Fi",  id: "3", authorId: "3" },
+  { name: "Name of the Wind",     genre: "Fantasy",  id: "1", authorId: "1" },
+  { name: "The Final Empire",     genre: "Fantasy",  id: "2", authorId: "2" },
+  { name: "The Long Earth",       genre: "Sci-Fi",   id: "3", authorId: "3" },
+  { name: "The Hero of Ages",     genre: "Fantasy",  id: "4", authorId: "2" },
+  { name: "The Colour of Magic",  genre: "Fantasy",  id: "5", authorId: "3" },
+  { name: "The Light Fantastic",  genre: "Fantasy",  id: "6", authorId: "3" },
 ];
 
 const authors = [
@@ -41,7 +45,7 @@ const BookType = new GraphQLObjectType({
     name:   { type: GraphQLString },
     genre:  { type: GraphQLString },
     author: { 
-      type: AuthorType,
+      type: AuthorType,  // just AuthorType because each book has only 1 author
       resolve(parent, args) {
         console.log(parent);
         return _.find(authors, {id: parent.authorId})
@@ -56,6 +60,12 @@ const AuthorType = new GraphQLObjectType({
     id:   { type: GraphQLID },
     name: { type: GraphQLString },
     age:  { type: GraphQLInt },
+    books: {
+      type: new GraphQLList(BookType), // a GraphQL list of BookType since authors have more than one book
+      resolve(parent, args){
+        return _.filter(books, {authorId: parent.id})
+      }
+    }
   })
 });
 
@@ -65,6 +75,12 @@ const AuthorType = new GraphQLObjectType({
 // The author property uses a resolve function that passes in the
 // parent array (books in this case) and the value of authorId,
 // and then searches for the corresponding data in the authors array.
+
+// To build a reciprocal relationship, a books property is added to Authortype.
+// The books type is a GraphQLList since one author can have many books.
+// The resolve function takes in the array books as the parent argument,
+// and returns the books list with the authorId property 
+// that matches the parent.id
 
 // 3. Describing a way a user can initially get into the graph
 // to grab data with root queries
