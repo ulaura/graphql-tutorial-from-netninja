@@ -19,9 +19,9 @@ const {
 // begin dummy data
 // =================
 const books = [
-  { name: "Name of the Wind", genre: "Fantasy", id: "1" },
-  { name: "The Final Empire", genre: "Fantasy", id: "2" },
-  { name: "The Long Earth",   genre: "Sci-Fi",  id: "3" },
+  { name: "Name of the Wind", genre: "Fantasy", id: "1", authorId: "1" },
+  { name: "The Final Empire", genre: "Fantasy", id: "2", authorId: "2" },
+  { name: "The Long Earth",   genre: "Sci-Fi",  id: "3", authorId: "3" },
 ];
 
 const authors = [
@@ -39,7 +39,14 @@ const BookType = new GraphQLObjectType({
   fields: () => ({
     id:     { type: GraphQLID },
     name:   { type: GraphQLString },
-    genre:  { type: GraphQLString }
+    genre:  { type: GraphQLString },
+    author: { 
+      type: AuthorType,
+      resolve(parent, args) {
+        console.log(parent);
+        return _.find(authors, {id: parent.authorId})
+      }
+    }
   })
 });
 
@@ -52,8 +59,12 @@ const AuthorType = new GraphQLObjectType({
   })
 });
 
-// 2. Define relationships between root queries
-// TBA. Right now we only have 1 type.
+// 2. Define relationships between types.
+// This is done by adding an authorId property to books,
+// then adding an author property under fields() in BookType above.
+// The author property uses a resolve function that passes in the
+// parent array (books in this case) and the value of authorId,
+// and then searches for the corresponding data in the authors array.
 
 // 3. Describing a way a user can initially get into the graph
 // to grab data with root queries
