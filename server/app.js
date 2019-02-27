@@ -11,11 +11,11 @@ const app = express();
 mongoose.connect(`mongodb+srv://laura:${password}@graphql-tutorial-from-netninja-aglto.mongodb.net/test?retryWrites=true`);
 mongoose.connection.once("open", () => {
   console.log("Connected to database!");
-})
+});
 
 // middleware
 app.use("/graphql", graphqlHTTP({
-  schema,
+  schema, //graphql schema
   graphiql: true 
 }));
 
