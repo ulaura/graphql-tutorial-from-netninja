@@ -9,7 +9,8 @@ const {
   GraphQLSchema,
   GraphQLID,
   GraphQLInt,
-  GraphQLList 
+  GraphQLList,
+  GraphQLNonNull 
 } = graphql;
 
 /*
@@ -117,8 +118,8 @@ const Mutation = new GraphQLObjectType({
     addAuthor: {
       type: AuthorType, // AuthorType because we're trying to add an author
       args: {
-        name: { type: GraphQLString },
-        age:  { type: GraphQLInt }
+        name: { type: new GraphQLNonNull(GraphQLString) },
+        age:  { type: new GraphQLNonNull(GraphQLInt) }
         // we're not adding an id because MongoDB automatically
         // indexes data as it's entered into the database
       },
@@ -137,9 +138,9 @@ const Mutation = new GraphQLObjectType({
     addBook: {
       type: BookType,
       args: {
-        name:     { type: GraphQLString },
-        genre:    { type: GraphQLString },
-        authorId: { type: GraphQLID }
+        name:     { type: new GraphQLNonNull(GraphQLString) },
+        genre:    { type: new GraphQLNonNull(GraphQLString) },
+        authorId: { type: new GraphQLNonNull(GraphQLID) }
       },
       resolve(parent, args) {
         // this Book is coming from the mongodb model
