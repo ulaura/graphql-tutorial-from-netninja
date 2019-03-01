@@ -1,15 +1,6 @@
 import React, { Component } from 'react';
-import { gql } from "apollo-boost";     // to make GraphQL queries
 import { graphql } from "react-apollo"; // to bind GraphQL queries to a component
-
-const getAuthorsQuery = gql`
-  {
-    authors{
-      name
-      id
-    }
-  }
-`
+import { getAuthorsQuery } from "../queries/queries";
 
 class AddBook extends Component {
   displayAuthors(){
@@ -28,12 +19,12 @@ class AddBook extends Component {
     return (
       <form id="add-book">
         <div className="field">
-          <label>Book name: </label>
+          <label>Book name:</label>
           <input type="text" />
         </div>
 
         <div className="field">
-          <label>Genre: </label>
+          <label>Genre:</label>
           <input type="text" />
         </div>
 
